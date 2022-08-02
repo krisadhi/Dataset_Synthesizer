@@ -382,9 +382,11 @@ void AGroupActorManager::UpdateProxyMeshes()
             NewProxyMeshComponent->bIsEditorOnly = true;
             NewProxyMeshComponent->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
             NewProxyMeshComponent->bHiddenInGame = true;
-            NewProxyMeshComponent->bVisible = !bShouldHideProxyMesh;
+            // NewProxyMeshComponent->bVisible = !bShouldHideProxyMesh;
+            // NewProxyMeshComponent->SetVisibleFlag(!bShouldHideProxyMesh);
+            NewProxyMeshComponent->SetVisibility(!bShouldHideProxyMesh);
             NewProxyMeshComponent->CastShadow = false;
-            NewProxyMeshComponent->PostPhysicsComponentTick.bCanEverTick = false;
+            // NewProxyMeshComponent->PostPhysicsComponentTick.bCanEverTick = false;
             NewProxyMeshComponent->CreationMethod = EComponentCreationMethod::Instance;
             NewProxyMeshComponent->RegisterComponentWithWorld(World);
 
@@ -455,7 +457,9 @@ void AGroupActorManager::UpdateProxyMeshesVisibility()
         if (CheckMesh)
         {
             CheckMesh->bHiddenInGame = bShouldHideProxyMesh;
-            CheckMesh->bVisible = !bShouldHideProxyMesh;
+            // CheckMesh->bVisible = !bShouldHideProxyMesh;
+            // CheckMesh->SetVisibleFlag(!bShouldHideProxyMesh);
+            CheckMesh->SetVisibility(!bShouldHideProxyMesh);
         }
     }
 }

@@ -17,6 +17,7 @@
 #include "RendererInterface.h"
 #include "StaticBoundShaderState.h"
 #include "Engine/TextureRenderTarget2D.h"
+#include "RenderTargetPool.h"
 
 DEFINE_LOG_CATEGORY(LogNVTextureReader);
 
@@ -252,7 +253,8 @@ void FNVTextureReader::CopyTexture2d(class IRendererModule* RendererModule, FRHI
             false);
 
         TRefCountPtr<IPooledRenderTarget> ResampleTexturePooledRenderTarget;
-        RendererModule->RenderTargetPoolFindFreeElement(RHICmdList, OutputDesc, ResampleTexturePooledRenderTarget, TEXT("ResampleTexture"));
+        // RendererModule->RenderTargetPoolFindFreeElement(RHICmdList, OutputDesc, ResampleTexturePooledRenderTarget, TEXT("ResampleTexture"));
+        GRenderTargetPool.FindFreeElement(RHICmdList, OutputDesc, ResampleTexturePooledRenderTarget, TEXT("ResampleTexture"));
         check(ResampleTexturePooledRenderTarget);
         // Get a temporary render target from the render thread's pool to draw the source render target on
         const FSceneRenderTargetItem& DestRenderTarget = ResampleTexturePooledRenderTarget->GetRenderTargetItem();
@@ -282,13 +284,17 @@ void FNVTextureReader::CopyTexture2d(class IRendererModule* RendererModule, FRHI
 
             const ERHIFeatureLevel::Type FeatureLevel = GMaxRHIFeatureLevel;
 
-            TShaderMap<FGlobalShaderType>* ShaderMap = GetGlobalShaderMap(FeatureLevel);
+            // TShaderMap<FGlobalShaderType>* ShaderMap = GetGlobalShaderMap(FeatureLevel);
+            // auto ShaderMap = GetGlobalShaderMap(FeatureLevel);
+            FGlobalShaderMap* ShaderMap = GetGlobalShaderMap(FeatureLevel);
             TShaderMapRef<FScreenVS> VertexShader(ShaderMap);
             TShaderMapRef<FScreenPS> PixelShader(ShaderMap);
 
             GraphicsPSOInit.BoundShaderState.VertexDeclarationRHI = GFilterVertexDeclaration.VertexDeclarationRHI;
-            GraphicsPSOInit.BoundShaderState.VertexShaderRHI = GETSAFERHISHADER_VERTEX(*VertexShader);
-            GraphicsPSOInit.BoundShaderState.PixelShaderRHI = GETSAFERHISHADER_PIXEL(*PixelShader);
+            // GraphicsPSOInit.BoundShaderState.VertexShaderRHI = GETSAFERHISHADER_VERTEX(*VertexShader);
+            // GraphicsPSOInit.BoundShaderState.PixelShaderRHI = GETSAFERHISHADER_PIXEL(*PixelShader);
+            GraphicsPSOInit.BoundShaderState.VertexShaderRHI = VertexShader.GetVertexShader();
+            GraphicsPSOInit.BoundShaderState.PixelShaderRHI = PixelShader.GetPixelShader();
             GraphicsPSOInit.PrimitiveType = PT_TriangleList;
 
             SetGraphicsPipelineState(RHICmdList, GraphicsPSOInit);
@@ -325,7 +331,8 @@ void FNVTextureReader::CopyTexture2d(class IRendererModule* RendererModule, FRHI
                 1, 1,                                   // Source USize, VSize
                 SourceRect.Max - SourceRect.Min,        // Target buffer size
                 FIntPoint(1, 1),                        // Source texture size
-                *VertexShader,
+                // *VertexShader,
+                VertexShader,
                 EDRF_Default);
         }
         RHICmdList.EndRenderPass();

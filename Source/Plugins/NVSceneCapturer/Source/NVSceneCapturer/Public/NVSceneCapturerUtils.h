@@ -572,9 +572,11 @@ namespace NVSceneCapturerUtils
     NVSCENECAPTURER_API FString GetDefaultDataOutputFolder();
     NVSCENECAPTURER_API FString GetOutputFileFullPath(uint32 Index, FString Extension, const FString& Subfolder, FString Filename = TEXT(""), uint8 ZeroPad = 6);
 
+    // NVSCENECAPTURER_API TSharedPtr<FJsonValue> CustomPropertyToJsonValueFunc(FProperty* PropertyType, const void* Value);
     NVSCENECAPTURER_API TSharedPtr<FJsonValue> CustomPropertyToJsonValueFunc(UProperty* PropertyType, const void* Value);
 
     /// Convert a property to json value use our own shorthand format, e.g: for Vector3: [x, y, z] instead of {"x": x, "y": y, "z": z}
+    // NVSCENECAPTURER_API TSharedPtr<FJsonValue> CustomPropertyToJsonValueFunc(FProperty* PropertyType, const void* Value);
     NVSCENECAPTURER_API TSharedPtr<FJsonValue> CustomPropertyToJsonValueFunc(UProperty* PropertyType, const void* Value);
 
     template<typename InStructType> TSharedPtr<FJsonObject> UStructToJsonObject(const InStructType& InStructData, int64 CheckFlags=0, int64 SkipFlags=0)

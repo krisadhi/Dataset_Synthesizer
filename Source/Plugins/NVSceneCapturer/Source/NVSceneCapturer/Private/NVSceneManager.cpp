@@ -345,6 +345,7 @@ void ANVSceneManager::OnCapturingCompleted(ANVSceneCapturerActor* SceneCapturer,
 #if WITH_EDITORONLY_DATA
 void ANVSceneManager::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
 {
+    // const FProperty* PropertyThatChanged = PropertyChangedEvent.MemberProperty;
     const UProperty* PropertyThatChanged = PropertyChangedEvent.MemberProperty;
     // Don't add ensure(PropertyThatChanged) here. 
     // When ANVSceneManagerActor is deplicated, PropertyThatChanged can be null.
